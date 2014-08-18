@@ -20,7 +20,11 @@ class ControllerPage extends Page
   protected function echoBody()
   {
       ?>
-        <input type="submit" onclick='playsong("ayawaska-HOT.mp3")' value="play" />
+        <input type="submit" onclick='playsong("/mnt/passport/fat32/Music/ayawaska-HOT.mp3")' value="play" />
+        <div id="current_dir">/</div>
+        <table id="directories">
+        </table>
+        </div>
       <?php
   }
   
@@ -30,8 +34,39 @@ class ControllerPage extends Page
         <script type="text/javascript">
         function playsong(song)
         {
-          alert(song);
+          // code for IE7+, Firefox, Chrome, Opera, Safari
+          xmlhttp=new XMLHttpRequest();
+          xmlhttp.onreadystatechange=function() {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+              document.getElementById("response").innerHTML=xmlhttp.responseText;
+            }
+          }
+          xmlhttp.open("GET","playSong.php?f="+song,true);
+          xmlhttp.send();
         }
+
+        function moveToDir(directory)
+        {
+          xmlhttp=new XMLHttpRequest();
+          xmlhttp.onreadystatechange=function() {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+              document.getElementById("response").innerHTML=xmlhttp.responseText;
+            }
+          }
+          xmlhttp.open("GET","playSong.php?f="+song,true);
+          xmlhttp.send();
+        }
+
+        function upOneDir()
+        {
+          var currentDir = document.getElementById("current_dir").innerHTML;
+          var upDirStrIdx = current_dir.lastIndexOf("/");
+          if(upIdx != 0)
+          {
+            var upDirIdx = 
+          }
+        }
+
         </script>; 
         <?php
   }
@@ -50,10 +85,5 @@ class ControllerPage extends Page
   public function insert() {
       echo "The insert function is called.";
       exit;
-  }
-
-  protected function execute()
-  {
-    $this->kernelWrapper->execute("/usr/bin/mplayer /home/harry/passport/fat32/Music/ayawaska-HOT.mp3", true);
   }
 }
