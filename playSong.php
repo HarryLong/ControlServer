@@ -1,17 +1,21 @@
 <?php
+require 'PlayerManager.php';
+
 static $PLAYER_BIN = "/usr/bin/mplayer ";
+
+// First kill any currently playing songs
+PlayerManager::stop();
+
 $output;
 $return_var;
 
 $file = $_GET['f'];
+$file = urldecode($file);
 
-$cmd = $PLAYER_BIN . $file . " > /dev/null &";
+$cmd = $PLAYER_BIN . "\"" . $file . "\" > /dev/null &";
 
-error_log("Going to execute command: " . $cmd);
+error_log("Executing command: " . $cmd);
 
-
-exec($cmd, $output, $return_var);
-
-error_log("Return code: " . $return_var);
+exec($cmd);
 
 ?>
