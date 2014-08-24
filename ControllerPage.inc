@@ -23,7 +23,7 @@ class ControllerPage extends Page
         {
           ?>
           <div id="player">
-          <audio id="audio_controls" controls="controls">
+          <audio id="audio_controller" controls="controls">
             <source id="audio_src" type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
@@ -77,11 +77,15 @@ class ControllerPage extends Page
           if($this->local)
           {
             ?>
+            
+            var controller = document.getElementById('audio_controller');
+            var source = document.getElementById('audio_src');
             var url = decodePHPURIComponent(song);
             url = url.replace("/home/harry/", "http://strawberrypi.no-ip.org/");
-            alert("URL: " + url);
-            // document.getElementById('audio_src').setAttribute('src', url);
-            // document.getElementById('audio_controls').play();
+            source.src=url;
+            controller.load(); //call this to just preload the audio without playing
+            controller.play(); //call this to play the song right away
+
             <?php
           }
           else
