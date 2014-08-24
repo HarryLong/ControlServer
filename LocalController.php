@@ -1,7 +1,7 @@
 <?php
 require 'ControllerPage.inc';
 
-$page = new ControllerPage(true);
+$page = ControllerPage::internal(false);
 $page->display();
 
 ?>

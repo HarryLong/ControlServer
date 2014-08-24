@@ -4,15 +4,46 @@ require 'KernelWrapper.inc';
 
 class ControllerPage extends Page
 {
-  public $PAGE_TITLE = "Harry's Controller";
-  public $local;
+  public static $PAGE_TITLE = "Harry's Controller";
+  public static $LAN_ADDRESS = "10.0.0.25/";
+  public static $WAN_ADDRESS = "http://strawberrypi.no-ip.org/";
 
-  function __construct($local)
+  public $local;
+  public $address;
+
+  function __construct()
   {
-      parent::__construct($this->PAGE_TITLE);
-      $this->local = $local;
-      error_log("Local? " . ($this->local ? "YES" : "NO"));
-  }  
+      parent::__construct(ControllerPage::$PAGE_TITLE);
+  }
+
+  public static function internal($from_lan)
+  {
+    $instance = new self();
+    $instance->local = true;
+    if($from_lan)
+    {
+      $instance->setAddress(ControllerPage::$LAN_ADDRESS);
+    }
+    else
+    {
+      $instance->setAddress(ControllerPage::$WAN_ADDRESS);
+    }
+    return $instance;
+  }
+
+  public static function external()
+  {
+    $instance = new self();
+    $instance->local = false;
+
+    return $instance;
+  }
+
+
+  public function setAddress($address)
+  {
+    $this->address = $address;
+  }
 
   protected function echoBody()
   {
@@ -22,11 +53,11 @@ class ControllerPage extends Page
         if($this->local)
         {
           ?>
-          <div id="player">
+<!--           <div id="player">
           <audio id="audio_controller" controls="controls">
             <source id="audio_src" type="audio/mpeg" />
             Your browser does not support the audio element.
-          </audio>
+          </audio> -->
           <?php
         }
         else
@@ -81,7 +112,8 @@ class ControllerPage extends Page
             var controller = document.getElementById('audio_controller');
             var source = document.getElementById('audio_src');
             var url = decodePHPURIComponent(song);
-            url = url.replace("/home/harry/", "http://strawberrypi.no-ip.org/");
+            // url = url.replace("/home/harry/", self->address);
+            alert("Playing song: " + url);
             source.src=url;
             controller.load(); //call this to just preload the audio without playing
             controller.play(); //call this to play the song right away

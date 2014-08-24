@@ -13,7 +13,7 @@
           height: 2px;
           background-color: black;
         }
-        #title{
+        .title{
         	padding-top: 5px;
         	padding-bottom: 5px;
         	text-align: center;
@@ -38,13 +38,19 @@
 
 	<body>
 		<div class="horizontal_line"/>
-			<div id='title'> <h1> Harry's Strawberry PI </h1> </div>
+			<div class='title'> <h1> Harry's Strawberry PI </h1> </div>
 		<div class="horizontal_line"/>
 		<div id="button_container">
+			<div class='title'> <h1> Play from current device: </h1> </div>
+			<input class="btn" type="button" onclick="location.href='LANLocalController.php'" value="LAN"> </br>
 			<div class="splitter" > </div>
-			<input class="btn" type="button" onclick="location.href='LocalController.php'" value="Local"> </br>
+			<input class="btn" type="button" onclick="location.href='LocalController.php'" value="!LAN"> </br>
 			<div class="splitter" > </div>
-			<input class="btn" type="button" onclick="location.href='ExternalController.php'" value="External"> </br>
+			<div class='title'> <h1> Play from home: </h1> </div>
+			<input class="btn" type="button" onclick="location.href='ExternalController.php'" value="Home"> </br>
+			<div class="splitter" > </div>
+			<div class='title'> <h1> Scripts: </h1> </div>
+			<input class="btn" type="button" onclick="location.href='ExternalController.php'" value="Sleep"> </br>
 		</div>
 	</body>
 	</html>
