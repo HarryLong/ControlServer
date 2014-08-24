@@ -53,11 +53,11 @@ class ControllerPage extends Page
         if($this->local)
         {
           ?>
-<!--           <div id="player">
+          <div id="player">
           <audio id="audio_controller" controls="controls">
             <source id="audio_src" type="audio/mpeg" />
             Your browser does not support the audio element.
-          </audio> -->
+          </audio>
           <?php
         }
         else
