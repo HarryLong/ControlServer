@@ -5,21 +5,42 @@ require 'KernelWrapper.inc';
 class ControllerPage extends Page
 {
   public $PAGE_TITLE = "Harry's Controller";
+  public $local;
 
-  function __construct()
+  function __construct($local)
   {
-        parent::__construct($this->PAGE_TITLE);
-  }
+      parent::__construct($this->PAGE_TITLE);
+      $this->local = $local;
+      error_log("Local? " . ($this->local ? "YES" : "NO"));
+  }  
 
   protected function echoBody()
   {
       ?>
       <body onload="init()">
-        <div id="now_playing_container">
-          <input id="btn_stop" type="image" src="./images/stop.png" onclick="stopSong()">
-          <b> Now playing: </b> <span id="now_playing_txt">;
-        </div>
+        <?php
+        if($this->local)
+        {
+          ?>
+          <div id="player">
+          <audio id="audio_controls" controls="controls">
+            <source id="audio_src" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+          <?php
+        }
+        else
+        {
+          ?>
+          <div id="player">
+            <input id="btn_stop" type="image" src="./images/stop.png" onclick="stopSong()">
+            <b> Now playing: </b> <span id="now_playing_txt">;
+          </div>
+          <?php
+        }
+        ?>
         <div id="root_container">
+          <div class="horizontal_line"/>
           <div id="title_container">
             <h1 id="title_text"> Harry's Raspberry PI Controller</h1>
           </div>
@@ -52,26 +73,47 @@ class ControllerPage extends Page
         <script type="text/javascript">
         function playsong(song)
         {
-          // // code for IE7+, Firefox, Chrome, Opera, Safari
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.open("GET","playSong.php?f="+song,true);
-          xmlhttp.send();
+        <?php
+          if($this->local)
+          {
+            ?>
+            var url = decodePHPURIComponent(song);
+            url = url.replace("/home/harry/", "http://strawberrypi.no-ip.org/");
+            alert("URL: " + url);
+            // document.getElementById('audio_src').setAttribute('src', url);
+            // document.getElementById('audio_controls').play();
+            <?php
+          }
+          else
+          {
+            ?>
+            xmlhttp=new XMLHttpRequest();
+            xmlhttp.open("GET","playSong.php?f="+song,true);
+            xmlhttp.send();
 
-          // Set song name
-          setNowPlaying(formatSongName(song));
+            // Set song name
+            setNowPlaying(formatSongName(song));
+            <?php
+          }
+          ?>
         }
 
         function formatSongName(fullpath)
         {
-          var decodedSong = decodeURIComponent(fullpath);
-          decodedSong = decodedSong.substring(decodedSong.lastIndexOf("/")+1, decodedSong.length-3);
-          decodedSong = decodedSong.replace(/\+/g,' ');
+          var decodedSong = decodePHPURIComponent(fullpath);
+          decodedSong = decodedSong.substring(decodedSong.lastIndexOf("/")+1, decodedSong.length-3); // Get just the song name
           return decodedSong;
+        }
+
+        function decodePHPURIComponent(component)
+        {
+          var decoded = decodeURIComponent(component);
+          decoded = decoded.replace(/\+/g,' ');
+          return decoded;
         }
 
         function setNowPlaying(song)
         {
-          document.getElementById("now_playing_container").style.display="inline";
           document.getElementById("now_playing_txt").innerHTML = song;
         }
 
@@ -81,7 +123,6 @@ class ControllerPage extends Page
           xmlhttp.open("GET","stopPlaying.php",true);
           xmlhttp.send();
           document.getElementById("now_playing_txt").innerHTML = "";
-          document.getElementById("now_playing_container").style.display="none";
         }
 
         function getCurrentDir()
@@ -99,6 +140,10 @@ class ControllerPage extends Page
         function moveToDir(directory)
         {
           directory = formatDir(directory);
+
+          // var audioElement = document.getElementById('browser_song');
+          // audioElement.setAttribute('src', directory);
+          // // audioElement.play();
 
           // First update the directories table
           setCurrentDir(directory);
@@ -174,6 +219,9 @@ class ControllerPage extends Page
         }
         #title_container{
           text-align: center;
+          vertical-align: center;
+          padding-top: 5px;
+          padding-bottom: 5px;
         }
         .song_cell:hover{
           cursor: pointer;
@@ -203,18 +251,16 @@ class ControllerPage extends Page
           height: 2px;
           background-color: black;
         }
-        #now_playing_container{
-          z-index: -1;
+        #player{
           height: 40px;
-          display: none;
         }
         #btn_stop{
-          height:40px;
+          height:20px;
           padding-right: 5px;
         }
-        #info_div {
-          padding-top: 5px;
-          padding-bottom: 5px;
+        #info_div{
+          padding-top: 10px;
+          padding-bottom: 10px;
         }
         body{
           background-color: #99FF66;

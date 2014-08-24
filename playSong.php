@@ -1,7 +1,7 @@
 <?php
 require 'PlayerManager.php';
 
-static $PLAYER_BIN = "sudo mplayer ";
+static $PLAYER_BIN = "mplayer ";
 
 // First kill any currently playing songs
 PlayerManager::stop();
