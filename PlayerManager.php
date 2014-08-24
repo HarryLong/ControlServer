@@ -3,7 +3,7 @@
 class PlayerManager{
 	static function stop()
 	{
-		exec("pkill mplayer");
+		exec("sudo pkill mplayer");
 	}
 }
 

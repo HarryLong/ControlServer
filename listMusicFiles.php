@@ -15,7 +15,7 @@ foreach($files as $f)
 	if(!is_dir($full_path) && isMp3($f))
 	{
 		error_log("Inserting" . "<tr class=\"song_cell\" ondblclick='playsong(\"" .$full_path ."\")'><td>".$f."</td></tr>");
-		echo "<tr class=\"song_cell\" ondblclick='playsong(\"" .$full_path ."\")'><td>".$f."</td></tr>";
+		echo "<tr class=\"song_cell\" onclick='playsong(\"" .$full_path ."\")'><td>".$f."</td></tr>";
 	}
 }
 
